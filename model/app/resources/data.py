@@ -18,6 +18,7 @@ INI: INIConfig      = INIConfig("app/config")
 INI.load_config()
 SERVICESROUTES:         configparser    = INI.config_files['SERVICESROUTES']
 DATABASE:               configparser    = INI.config_files['DATABASE']
+DATAINFO:               configparser    = INI.config_files['DATAINFO']
 WHOAMI:                 configparser    = INI.config_files['WHOAMI']
 
 # | JSON |
