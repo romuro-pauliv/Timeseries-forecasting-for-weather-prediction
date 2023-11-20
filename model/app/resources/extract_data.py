@@ -8,12 +8,24 @@
 # | Imports |----------------------------------------------------------------------------------------------------------|
 from resources.data import DATAINFO
 
+from connections.log import LogConnectInstance
+
 from zipfile import ZipFile
 import pandas as pd
 import keras
 
 from pandas.core.frame import DataFrame
 # |--------------------------------------------------------------------------------------------------------------------|
+
+
+class ExtractDataLog:
+    @staticmethod
+    def _get_file(uri: str, path_: str) -> None:
+        LogConnectInstance.report("GET", uri, "info", True, f"PATH {path_}")
+    
+    @staticmethod
+    def _read_csv(filename: str) -> None:
+        LogConnectInstance.report("READ", "LOCAL", "info", True, f"{filename}")
 
 
 class ExtractData(object):
@@ -33,6 +45,7 @@ class ExtractData(object):
         Get data from uri using keras
         """
         self.zip_path: str = keras.utils.get_file(origin=self.data_uri, fname=self.zip_filename)
+        ExtractDataLog._get_file(self.data_uri, self.zip_path)
         
     def _extract_zip(self) -> None:
         """
@@ -47,4 +60,5 @@ class ExtractData(object):
         Returns:
             pandas.core.frame.Dataframe: The csv data
         """
+        ExtractDataLog._read_csv(self.csv_filename)
         return pd.read_csv(self.csv_filename)
