@@ -11,6 +11,8 @@ from connections.log import LogConnectInstance
 import matplotlib.pyplot as plt
 from graph.resources.variables_names import titles, feature_keys, colors, date_time_key
 
+
+import statistics
 # | typing |-----------------------------------------------------------------------------------------------------------|
 from pandas.core.frame import DataFrame
 from pandas.core.series import Series
@@ -30,6 +32,20 @@ class RawVisualizationLog:
     def _show() -> None:
         LogConnectInstance.report("SHOW", "LOCAL", "info", True, "SHOW PLT")
 
+
+class RawHist2DLog:
+    @staticmethod
+    def _define_fig() -> None:
+        LogConnectInstance.report("MAKE", "LOCAL", "info", True, "HIST2D")
+    
+    @staticmethod
+    def _define_var(x_var: str, y_var: str) -> None:
+        LogConnectInstance.report("SET", "LOCAL", "info", True, f"X[{x_var}] - Y[{y_var}]")
+    
+    @staticmethod
+    def _show() -> None:
+        LogConnectInstance.report("SHOW", "LOCAL", "info", True, "SHOW PLT")
+        
 class RawVisualization(object):
     def __init__(self, titles:          list[str] = titles,
                        feature_keys:    list[str] = feature_keys,
@@ -111,3 +127,80 @@ class RawVisualization(object):
         
         RawVisualizationLog._show()
         plt.show()
+
+
+class RawHist2D(object):
+    def __init__(self, titles:          list[str] = titles,
+                       feature_keys:    list[str] = feature_keys,
+                       date_time_key:   str       = date_time_key) -> None:
+        """
+        Initalize RawVisualization Instance.
+        Args:
+            titles (list[str], optional): List of titles. Defaults to titles.
+            feature_keys (list[str], optional): Keys to create each graph. Defaults to feature_keys.
+            colors (list[str], optional): Colors to each graph. Defaults to colors.
+            date_time_key (str, optional): key name to datetime column. Defaults to date_time_key.
+        """
+        self.titles:            list[str]   = titles
+        self.features_keys:     list[str]   = feature_keys
+        self.date_time_key:     list[str]   = date_time_key
+        
+        self.bins:              tuple[int, int] = (100, 100)
+        
+    def define_data(self, data: DataFrame) -> None:
+        """
+        Set data to plot all graphs
+        Args:
+            data (DataFrame): Pandas dataframe
+        """
+        self.data: DataFrame = data
+    
+    def set_variables(self, x_var: int, y_var: int) -> None:
+        """
+        Set variables based on graph.resources.variables_names.py [feature_keys]
+        Args:
+            x_var (int): Variable index on feature_key
+            y_var (int): Variable index on feature_key
+        """
+        self.x_var: Series = self.data[self.features_keys[x_var]]
+        self.y_var: Series = self.data[self.features_keys[y_var]]
+
+        self.x_var_index: int = x_var
+        self.y_var_index: int = y_var
+        
+        RawHist2DLog._define_var(self.features_keys[x_var], self.features_keys[y_var])
+    
+    def _make_hist2d(self) -> None:
+        """
+        Make Hist 2d
+        """
+        plt.hist2d(self.x_var, self.y_var, bins=self.bins)
+        RawHist2DLog._define_fig()
+    
+    def _set_hist2d_config(self) -> None:
+        """
+        Set x and y labels and graph title
+        """
+        plt.title(f"{self.titles[self.x_var_index]} x {self.titles[self.y_var_index]}")
+        
+        plt.xlabel(f"{self.titles[self.x_var_index]} [{self.features_keys[self.x_var_index]}]")
+        plt.ylabel(f"{self.titles[self.y_var_index]} [{self.features_keys[self.y_var_index]}]")
+        
+    def set_xy_lim(self, x_lim: tuple[float, float], y_lim: tuple[float, float]) -> None:
+        """
+        define the threshold to x, y variables
+        Args:
+            x_lim (tuple[float, float]): (min, max) threshold
+            y_lim (tuple[float, float]): (min, max) threshold
+        """
+        plt.xlim(x_lim)
+        plt.ylim(y_lim)
+            
+    def show(self) -> None:
+        self._make_hist2d()
+        self._set_hist2d_config()
+        # self.set_xy_lim((250, 310), (0, 100))
+        
+        RawHist2DLog._show()
+        plt.show()
+
