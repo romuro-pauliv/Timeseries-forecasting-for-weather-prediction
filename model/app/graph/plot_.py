@@ -116,7 +116,7 @@ class RawVisualization(object):
             c:              str     = self.colors[i % len(colors)]
             t_data:         Series  = self.data[key]
             t_data.index:   Series  = self.pandas_time_data 
-            t_data.head()
+            print(t_data.head())
             
             ax: _axes.Axes = t_data.plot(
                 ax=self.axes[i // 2, i % 2],

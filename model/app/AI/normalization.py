@@ -1,28 +1,32 @@
 # +--------------------------------------------------------------------------------------------------------------------|
-# |                                                                                              app.resources.data.py |
+# |                                                                                         app.model.normalization.py |
 # |                                                                                             Author: Pauliv, Rômulo |
 # |                                                                                          email: romulopauliv@bk.ru |
 # |                                                                                                    encoding: UTF-8 |
 # +--------------------------------------------------------------------------------------------------------------------|
 
 # | Imports |----------------------------------------------------------------------------------------------------------|
-from resources.data_provider import INIConfig, JsonReader
-
-import configparser
-
-from typing import Any
+from connections.log import LogConnectInstance
+# | typing |-----------------------------------------------------------------------------------------------------------|
+import numpy as np
 # |--------------------------------------------------------------------------------------------------------------------|
 
-JSON: JsonReader    = JsonReader("app/json")
-INI: INIConfig      = INIConfig("app/config")
+def _normalizeLog() -> None:
+    LogConnectInstance.report("CALC", "LOCAL", "info", True, "NORMALIZATION")
 
-# | .INI FILES |
-INI.load_config()
-SERVICESROUTES:         configparser    = INI.config_files['SERVICESROUTES']
-MODELARGS:              configparser    = INI.config_files['MODELARGS']
-DATABASE:               configparser    = INI.config_files['DATABASE']
-DATAINFO:               configparser    = INI.config_files['DATAINFO']
-WHOAMI:                 configparser    = INI.config_files['WHOAMI']
+def normalize(data: np.array, train_split: int) -> np.array:
+    """
+    Normalize 
+    Args:
+        data (DataFrame): pandas dataframe
+        train_split (int): Split Index division
 
-# | JSON |
-SELECT_VARIABLES:     dict[str, Any]    = JSON.file_data('select_variables.json')
+    Returns:
+        DataFrame: Normalized dataframe
+    """
+    data_mean: np.array = data[:train_split].mean(axis=0)
+    data_std : np.array = data[:train_split].std(axis=0)
+    
+    _normalizeLog()
+    
+    return (data - data_mean) / data_std

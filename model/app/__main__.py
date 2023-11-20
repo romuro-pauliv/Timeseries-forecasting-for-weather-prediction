@@ -7,10 +7,12 @@
 
 # | Imports |----------------------------------------------------------------------------------------------------------|
 from resources.extract_data import ExtractData
-
 from graph.plot_ import RawVisualization, RawHist2D, Correlation
-from arg_parse.arguments import args
 
+from AI.normalization import normalize
+
+
+from arg_parse.arguments import args
 # | Typing |-----------------------------------------------------------------------------------------------------------|
 from pandas.core.frame import DataFrame
 # |--------------------------------------------------------------------------------------------------------------------|
@@ -35,3 +37,5 @@ if args.correlation:
     correlation.define_data(data)
     correlation.show_heatmap()
     
+from AI.train_val_split import TrainValSplit
+train, valid = TrainValSplit(data).get()
