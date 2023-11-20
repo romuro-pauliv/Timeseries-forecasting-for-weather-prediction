@@ -45,6 +45,17 @@ class RawHist2DLog:
     @staticmethod
     def _show() -> None:
         LogConnectInstance.report("SHOW", "LOCAL", "info", True, "SHOW PLT")
+
+
+class CorrelationLog:
+    @staticmethod
+    def _define_fig() -> None:
+        LogConnectInstance.report("MAKE", "LOCAL", "info", True, "HEATMAP")
+    
+    @staticmethod
+    def _show() -> None:
+        LogConnectInstance.report("SHOW", "LOCAL", "info", True, "SHOW PLT")
+
         
 class RawVisualization(object):
     def __init__(self, titles:          list[str] = titles,
@@ -127,6 +138,7 @@ class RawVisualization(object):
         
         RawVisualizationLog._show()
         plt.show()
+        plt.clf()
 
 
 class RawHist2D(object):
@@ -203,4 +215,45 @@ class RawHist2D(object):
         
         RawHist2DLog._show()
         plt.show()
+        plt.clf()
 
+
+class Correlation(object):
+    def __init__(self) -> None:
+        """
+        Initialize Correlation Instance.
+        """
+        self.fontsize:  int = 14
+        self.rotation:  int = 90
+        self.labelsize: int = 14
+        
+        self.title:    str = "Feature Correlation Heatmap"
+    
+    def define_data(self, data: DataFrame) -> None:
+        """
+        Set data to plot all graphs
+        Args:
+            data (DataFrame): Pandas dataframe
+        """
+        self.data: DataFrame = data
+    
+    def show_heatmap(self) -> None:
+        """
+        Show heatmap correlation
+        """
+        self.data: DataFrame = self.data.drop(columns=self.data.columns[0])
+        plt.matshow(self.data.corr())
+        plt.xticks(range(self.data.shape[1]), self.data.columns, fontsize=self.fontsize, rotation=self.rotation)
+        plt.gca().xaxis.tick_bottom()
+        plt.yticks(range(self.data.shape[1]), self.data.columns, fontsize=self.fontsize)
+        
+        CorrelationLog._define_fig()
+        
+        cb = plt.colorbar()
+        cb.ax.tick_params(labelsize=self.labelsize)
+        plt.title(self.title, fontsize=self.fontsize)
+        
+        
+        CorrelationLog._show()
+        plt.show()
+        plt.clf()

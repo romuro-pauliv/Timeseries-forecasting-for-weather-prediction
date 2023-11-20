@@ -8,7 +8,7 @@
 # | Imports |----------------------------------------------------------------------------------------------------------|
 from resources.extract_data import ExtractData
 
-from graph.plot_ import RawVisualization, RawHist2D
+from graph.plot_ import RawVisualization, RawHist2D, Correlation
 from arg_parse.arguments import args
 
 # | Typing |-----------------------------------------------------------------------------------------------------------|
@@ -29,3 +29,9 @@ if args.hist2d:
     raw_hist_2d.define_data(data)
     raw_hist_2d.set_variables(args.hist2dx, args.hist2dy)
     raw_hist_2d.show()
+
+if args.correlation:
+    correlation: Correlation = Correlation()
+    correlation.define_data(data)
+    correlation.show_heatmap()
+    

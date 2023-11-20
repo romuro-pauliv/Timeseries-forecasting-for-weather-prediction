@@ -20,6 +20,9 @@ parser.add_argument('--hist2d',
                     action='store_true',
                     help="Show Hist2D to analysis data [use --hist2dx --hist2dy] to set variables"
                     )
+parser.add_argument('--correlation',
+                    action='store_true',
+                    help='Show correlation heatmap between the all variables')
 # |--------------------------------------------------------------------------------------------------------------------|
 
 # Values |-------------------------------------------------------------------------------------------------------------|
