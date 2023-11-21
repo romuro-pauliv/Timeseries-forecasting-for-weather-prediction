@@ -11,6 +11,7 @@ from graph.plot_ import RawVisualization, RawHist2D, Correlation
 
 from AI.train_val_split import TrainValSplit
 from AI.datasets import TrainDataset, ValidationDataset
+from AI.model import ModelTraining
 
 from arg_parse.arguments import args
 # | Typing |-----------------------------------------------------------------------------------------------------------|
@@ -42,9 +43,7 @@ if args.AI:
     
     # TranValSplit Instance
     train_val_split: TrainValSplit = TrainValSplit(data)
-
     train, valid, feature = train_val_split.get()
-    
     train_split: int = train_val_split.get_train_split_index()
 
     # TrainDataset Instance
@@ -59,3 +58,6 @@ if args.AI:
     validation_dataset.define_feature(feature)
     valid_dataset: _BatchDataset = validation_dataset.get()
     
+    # Model Traning
+    model_training: ModelTraining = ModelTraining(train_dataset, valid_dataset)
+    model_training._set_model()
