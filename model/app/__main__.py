@@ -60,4 +60,4 @@ if args.AI:
     
     # Model Traning
     model_training: ModelTraining = ModelTraining(train_dataset, valid_dataset)
-    model_training._set_model()
+    model_training.fit_model()
