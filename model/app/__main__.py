@@ -10,7 +10,7 @@ from resources.extract_data import ExtractData
 from graph.plot_ import RawVisualization, RawHist2D, Correlation
 
 from AI.train_val_split import TrainValSplit
-from AI.datasets import TrainDataset
+from AI.datasets import TrainDataset, ValidationDataset
 
 from arg_parse.arguments import args
 # | Typing |-----------------------------------------------------------------------------------------------------------|
@@ -46,8 +46,20 @@ if args.AI:
     
     train_split: int = train_val_split.get_train_split_index()
 
-    # TranDataset Instance
+    # TrainDataset Instance
     train_dataset: TrainDataset = TrainDataset(train)
     train_dataset.define_train_split(train_split)
     train_dataset.define_feature(feature)
-    train_dataset.get()
+    train_dataset = train_dataset.get()
+    
+    #ValidationDataset Instance
+    validation_dataset: ValidationDataset = ValidationDataset(valid)
+    validation_dataset.define_train_split(train_split)
+    validation_dataset.define_feature(feature)
+    valid_dataset = validation_dataset.get()
+    
+    for batch in train_dataset.take(1):
+        inputs, targets = batch
+    
+    print(inputs[0])
+    print(targets[0])
