@@ -23,6 +23,9 @@ parser.add_argument('--hist2d',
 parser.add_argument('--correlation',
                     action='store_true',
                     help='Show correlation heatmap between the all variables')
+parser.add_argument('--AI',
+                    action='store_true',
+                    help='Training AI')
 # |--------------------------------------------------------------------------------------------------------------------|
 
 # Values |-------------------------------------------------------------------------------------------------------------|

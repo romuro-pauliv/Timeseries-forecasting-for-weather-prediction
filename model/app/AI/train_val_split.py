@@ -92,4 +92,12 @@ class TrainValSplit(object):
         self._make_new_feature_dataframe()
         self._normalize_feature()
     
-        return self.features[0:self.train_split-1], self.features[self.train_split:]
+        return self.features[0:self.train_split-1], self.features[self.train_split:], self.features
+    
+    def get_train_split_index(self) -> int:
+        """
+        Return train_split var(int)
+        Returns:
+            int: train_split variable
+        """
+        return self.train_split

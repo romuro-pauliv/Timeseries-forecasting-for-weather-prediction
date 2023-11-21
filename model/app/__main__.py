@@ -9,8 +9,8 @@
 from resources.extract_data import ExtractData
 from graph.plot_ import RawVisualization, RawHist2D, Correlation
 
-from AI.normalization import normalize
-
+from AI.train_val_split import TrainValSplit
+from AI.datasets import TrainDataset
 
 from arg_parse.arguments import args
 # | Typing |-----------------------------------------------------------------------------------------------------------|
@@ -36,6 +36,18 @@ if args.correlation:
     correlation: Correlation = Correlation()
     correlation.define_data(data)
     correlation.show_heatmap()
+
+if args.AI:
     
-from AI.train_val_split import TrainValSplit
-train, valid = TrainValSplit(data).get()
+    # TranValSplit Instance
+    train_val_split: TrainValSplit = TrainValSplit(data)
+
+    train, valid, feature = train_val_split.get()
+    
+    train_split: int = train_val_split.get_train_split_index()
+
+    # TranDataset Instance
+    train_dataset: TrainDataset = TrainDataset(train)
+    train_dataset.define_train_split(train_split)
+    train_dataset.define_feature(feature)
+    train_dataset.get()
