@@ -15,6 +15,7 @@ from AI.datasets import TrainDataset, ValidationDataset
 from arg_parse.arguments import args
 # | Typing |-----------------------------------------------------------------------------------------------------------|
 from pandas.core.frame import DataFrame
+from tensorflow.python.data.ops.batch_op import _BatchDataset
 # |--------------------------------------------------------------------------------------------------------------------|
 
 extract_data: ExtractData = ExtractData()
@@ -50,16 +51,11 @@ if args.AI:
     train_dataset: TrainDataset = TrainDataset(train)
     train_dataset.define_train_split(train_split)
     train_dataset.define_feature(feature)
-    train_dataset = train_dataset.get()
+    train_dataset: _BatchDataset = train_dataset.get()
     
     #ValidationDataset Instance
     validation_dataset: ValidationDataset = ValidationDataset(valid)
     validation_dataset.define_train_split(train_split)
     validation_dataset.define_feature(feature)
-    valid_dataset = validation_dataset.get()
+    valid_dataset: _BatchDataset = validation_dataset.get()
     
-    for batch in train_dataset.take(1):
-        inputs, targets = batch
-    
-    print(inputs[0])
-    print(targets[0])

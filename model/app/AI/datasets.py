@@ -14,6 +14,7 @@ import keras
 import numpy as np
 # | Typing |-----------------------------------------------------------------------------------------------------------|
 from pandas.core.frame import DataFrame
+from tensorflow.python.data.ops.batch_op import _BatchDataset
 # |--------------------------------------------------------------------------------------------------------------------|
 
 
@@ -90,7 +91,7 @@ class TrainDataset(object):
         """
         Defines the time series dataset from arrays.
         """
-        self.dataset_train = keras.preprocessing.timeseries_dataset_from_array(
+        self.dataset_train: _BatchDataset = keras.preprocessing.timeseries_dataset_from_array(
             self.x_train, self.y_train,
             sequence_length=self.sequence_length,
             sampling_rate=self.step,
@@ -99,7 +100,7 @@ class TrainDataset(object):
         
         TrainDatasetLog._define_timeseries_from_array()
     
-    def get(self) -> keras.preprocessing.timeseries_dataset_from_array:
+    def get(self) -> _BatchDataset:
         """
         Obtains the time series dataset.
         Returns:
@@ -162,7 +163,7 @@ class ValidationDataset(object):
         """
         Defines the time series dataset from arrays.
         """
-        self.dataset_valid = keras.preprocessing.timeseries_dataset_from_array(
+        self.dataset_valid: _BatchDataset = keras.preprocessing.timeseries_dataset_from_array(
             self.x_val, self.y_val,
             sequence_length=self.sequence_length,
             sampling_rate=self.step,
@@ -171,7 +172,7 @@ class ValidationDataset(object):
 
         ValidationDatasetLog._define_timeseries_from_array()
         
-    def get(self) -> keras.preprocessing.timeseries_dataset_from_array:
+    def get(self) -> _BatchDataset:
         """
         Obtains the time series dataset.
         Returns:
