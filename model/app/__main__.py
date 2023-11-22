@@ -92,3 +92,11 @@ if args.AIprediction:
     validation_dataset.define_feature(feature)
     valid_dataset: _BatchDataset = validation_dataset.get()
     
+    model: K_Functional = ModelTraining.load_model()
+    
+    for x, y in valid_dataset.take(5):
+        show_plot(
+            plot_data=[x[0][:, 1].numpy(), y[0].numpy(), model.predict(x)[0]],
+            delta=12,
+            title="Single Step Prediction"
+        )
