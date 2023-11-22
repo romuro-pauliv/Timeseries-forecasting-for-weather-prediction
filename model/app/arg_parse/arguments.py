@@ -26,6 +26,9 @@ parser.add_argument('--correlation',
 parser.add_argument('--AI',
                     action='store_true',
                     help='Training AI')
+parser.add_argument("--AIprediction",
+                    action='store_true',
+                    help='Load the model if the path contain the .keras file')
 # |--------------------------------------------------------------------------------------------------------------------|
 
 # Values |-------------------------------------------------------------------------------------------------------------|

@@ -43,7 +43,6 @@ class ModelTraining(object):
         self.train_dataset: _BatchDataset = train_dataset
         self.valid_dataset: _BatchDataset = valid_dataset
 
-        
         self.epochs         :   int     = int(MODELARGS['AI']['epochs'])
         self.LSTM_layer1    :   int     = int(MODELARGS['AI']['LSTM_layer1'])
         self.learning_rate  :   float   = float(MODELARGS['AI']['learning_rate'])
@@ -101,9 +100,9 @@ class ModelTraining(object):
         Args:
             history (K_History): History object containing training/validation loss values.
         """
-        loss        = history.history['loss']
-        val_loss    = history.history['val_loss']
-
+        loss    : list[float]     = history.history['loss']
+        val_loss: list[float]     = history.history['val_loss']
+        
         epochs: list[int] = range(len(loss))
         
         plt.figure()
@@ -137,4 +136,15 @@ class ModelTraining(object):
         )
         self._save_model()
         self._visualize_loss(history)
-        
+    
+    @staticmethod
+    def load_model(path_: str = MODELARGS['AI']['path_save']) -> K_Functional:
+        """
+        Load model
+        Args:
+            path_ (str, optional): Path that contain the model. Defaults to MODELARGS['AI']['path_save'].
+
+        Returns:
+            K_Functional: Keras model
+        """
+        return keras.models.load_model(path_)
