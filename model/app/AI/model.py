@@ -10,6 +10,8 @@ from resources.data import MODELARGS
 
 from connections.log import LogConnectInstance
 
+import matplotlib.pyplot as plt
+
 import keras
 # | Typing |-----------------------------------------------------------------------------------------------------------|
 from tensorflow.python.data.ops.batch_op import _BatchDataset
@@ -18,6 +20,7 @@ from keras.src.engine.keras_tensor  import KerasTensor      as K_KerasTensor
 from keras.src.engine.functional    import Functional       as K_Functional
 from keras.src.callbacks            import EarlyStopping    as K_EarlyStopping
 from keras.src.callbacks            import ModelCheckpoint  as K_ModelCheckpoint
+from keras.src.callbacks            import History          as K_History
 # |--------------------------------------------------------------------------------------------------------------------|
 
 class ModelTrainingLog:
@@ -46,6 +49,7 @@ class ModelTraining(object):
         self.learning_rate  :   float   = float(MODELARGS['AI']['learning_rate'])
         self.loss_function  :   str     = MODELARGS['AI']['loss_function']
         self.path_checkpoint:   str     = MODELARGS['AI']['path_checkpoint']
+        self.path_save      :   str     = MODELARGS['AI']['path_save']
         
         self.es_monitor_1   :   str     = MODELARGS['AI']['monitor_1']
         self.es_min_delta   :   int     = 0
@@ -75,6 +79,9 @@ class ModelTraining(object):
         self.model.summary()
     
     def _set_checkpoint(self) -> None:
+        """
+        Sets up callbacks for checkpointing and early stopping.
+        """
         self.es_callback: K_EarlyStopping = keras.callbacks.EarlyStopping(
             monitor=self.es_monitor_1, min_delta=self.es_min_delta, patience=self.es_patience)
         
@@ -88,11 +95,46 @@ class ModelTraining(object):
         
         ModelTrainingLog._set_checkpoint(self.path_checkpoint)
     
+    def _visualize_loss(self, history: K_History) -> None:
+        """
+        Visualizes the training and validation loss.
+        Args:
+            history (K_History): History object containing training/validation loss values.
+        """
+        loss        = history.history['loss']
+        val_loss    = history.history['val_loss']
+
+        epochs: list[int] = range(len(loss))
+        
+        plt.figure()
+        plt.plot(epochs, loss, 'b', label="Training Loss")
+        plt.plot(epochs, val_loss, 'r', label="Validation Loss")
+        
+        plt.title("Training and Validation Loss")
+        plt.xlabel("Epochs")
+        plt.ylabel("Loss")
+        plt.legend()
+        plt.show()
+        plt.clf()
+        
+    def _save_model(self) -> None:
+        """
+        Save the Model
+        """
+        self.model.save(self.path_save)
+    
     def fit_model(self) -> None:
+        """
+        Initiates model fitting and training
+        """
         self._set_model()
         self._set_checkpoint()
-        
-        history = self.model.fit(
-            self.train_dataset, epochs=self.epochs,
-            validation_data=self.valid_dataset, callbacks=[self.es_callback, self.modelckpt_callback]
+        history: K_History = self.model.fit(
+            self.train_dataset,
+            epochs=self.epochs,
+            validation_data=self.valid_dataset,
+            callbacks=[self.es_callback, self.modelckpt_callback]
         )
+        self._save_model()
+        self._visualize_loss(history)
+        

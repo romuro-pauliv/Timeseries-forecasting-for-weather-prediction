@@ -47,10 +47,10 @@ if args.AI:
     train_split: int = train_val_split.get_train_split_index()
 
     # TrainDataset Instance
-    train_dataset: TrainDataset = TrainDataset(train)
-    train_dataset.define_train_split(train_split)
-    train_dataset.define_feature(feature)
-    train_dataset: _BatchDataset = train_dataset.get()
+    training_dataset: TrainDataset = TrainDataset(train)
+    training_dataset.define_train_split(train_split)
+    training_dataset.define_feature(feature)
+    train_dataset: _BatchDataset = training_dataset.get()
     
     #ValidationDataset Instance
     validation_dataset: ValidationDataset = ValidationDataset(valid)
