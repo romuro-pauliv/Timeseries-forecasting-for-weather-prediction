@@ -65,15 +65,6 @@ if args.AI:
     model_training: ModelTraining = ModelTraining(train_dataset, valid_dataset)
     model_training.fit_model()
 
-    model: K_Functional = ModelTraining.load_model()
-    
-    for x, y in train_dataset.take(1):
-        show_plot(
-            plot_data=[x[0][:, 1].numpy(), y[0].numpy(), model.predict(x)[0]],
-            delta=12,
-            title="Single Step Prediction"
-        )
-
 if args.AIprediction:
     # TranValSplit Instance
     train_val_split: TrainValSplit = TrainValSplit(data)
@@ -94,9 +85,22 @@ if args.AIprediction:
     
     model: K_Functional = ModelTraining.load_model()
     
-    for x, y in valid_dataset.take(5):
-        show_plot(
-            plot_data=[x[0][:, 1].numpy(), y[0].numpy(), model.predict(x)[0]],
-            delta=12,
-            title="Single Step Prediction"
-        )
+    # for x, y in valid_dataset.take(5):
+    #     show_plot(
+    #         plot_data=[x[0][:, 1].numpy(), y[0].numpy(), model.predict(x)[0]],
+    #         delta=12,
+    #         title="Single Step Prediction"
+    #     )
+    
+    
+    import numpy as np
+    y_p: np.ndarray
+    y  : np.ndarray
+    
+    for x, y in valid_dataset.take(1):
+        y_p: np.ndarray = model.predict(x)
+        y  : np.ndarray = y.numpy()
+    
+    error: np.ndarray = y - y_p
+    
+    print(error.mean(axis=0), error.std(axis=0))
